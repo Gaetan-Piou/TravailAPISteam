@@ -9,35 +9,35 @@ void GameManager::OnFriendStatusChanged(PersonaStateChange_t* pCallback)
     switch (friendStatusEnum)
     {
         case k_EPersonaStateOffline:
-            friendStatus = "offline";
+            friendStatus = "Hors ligne";
             break;
         case k_EPersonaStateOnline:
-            friendStatus = "online";
+            friendStatus = "En ligne";
             break;
         case k_EPersonaStateBusy:
-            friendStatus = "busy";
+            friendStatus = "Occupe";
             break;
         case k_EPersonaStateAway:
-            friendStatus = "away";
+            friendStatus = "Absent";
             break;
         case k_EPersonaStateSnooze:
-            friendStatus = "set on snooze";
+            friendStatus = "Ne pas deranger";
             break;
         case k_EPersonaStateLookingToTrade:
-            friendStatus = "looking to trade";
+            friendStatus = "Cherche un echange";
             break;
         case k_EPersonaStateLookingToPlay:
-            friendStatus = "looking to play";
+            friendStatus = "Veut jouer";
             break;
         case k_EPersonaStateInvisible:
-            friendStatus = "invisible";
+            friendStatus = "Invisible";
             break;
         default:
-            friendStatus = "unkown status";
+            friendStatus = "Statut inconnu";
             break;
     }
 
-    std::cout << friendName << " status is now " << friendStatus << " !" << std::endl;
+    std::cout << "Le statut de " << friendName << " est desormais " << friendStatus << " !" << std::endl;
 
     
     SteamAPICall_t hSteamAPICall = SteamUserStats()->GetNumberOfCurrentPlayers();
@@ -52,7 +52,7 @@ void GameManager::OnGetNumberOfCurrentPlayer(NumberOfCurrentPlayers_t* pCallback
         return;
     }
 
-    std::cout << "Numbers of players currently playing : " << pCallback->m_cPlayers << std::endl << std::endl;
+    std::cout << "Joueurs presents : " << pCallback->m_cPlayers << std::endl << std::endl;
 }
 
 void GameManager::OnGetLobbyMatchList(LobbyMatchList_t* pCallback, bool bIOFailure)
@@ -64,14 +64,14 @@ void GameManager::OnGetLobbyMatchList(LobbyMatchList_t* pCallback, bool bIOFailu
         return;
     }
 
-    std::cout << "Number of lobbies matching : " << pCallback->m_nLobbiesMatching << std::endl;
+    std::cout << "Nombre de lobbies : " << pCallback->m_nLobbiesMatching << std::endl;
 
    for (int i = 0; i < pCallback->m_nLobbiesMatching; i++)
    {
        CSteamID LobbyID = SteamMatchmaking()->GetLobbyByIndex(i);
        if (LobbyID.IsLobby() && SteamMatchmaking()->GetNumLobbyMembers(LobbyID) > 4)
        {
-           std::cout << "Lobby number : " << i << std::endl;
+           std::cout << "Numero du lobby : " << i << std::endl;
            SteamAPICall_t hSteamAPICall = SteamMatchmaking()->JoinLobby(LobbyID);
            m_LobbyEnterCallResult.Set(hSteamAPICall, this, &GameManager::OnLobbyEntered);
            break;
@@ -87,10 +87,10 @@ void GameManager::OnLobbyEntered(LobbyEnter_t* pCallback, bool bIOFailure)
         CSteamID UserID = SteamMatchmaking()->GetLobbyMemberByIndex(pCallback->m_ulSteamIDLobby, i);
 
         const char* userName = SteamFriends()->GetFriendPersonaName(UserID);
-        std::cout << "User Name : " << userName << std::endl;
+        std::cout << "Nom d'utilisateur : " << userName;
 
         const char* oldUserName = SteamFriends()->GetFriendPersonaNameHistory(UserID, 0);
-        std::cout << "Old User Name : " << oldUserName << std::endl;
+        std::cout << "(Anciennement " << oldUserName << ")" << std::endl;
     }
 }
 
